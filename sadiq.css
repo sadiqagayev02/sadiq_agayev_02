@@ -1,0 +1,91 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+  margin: 0; padding: 0;  
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+  background-position: center;
+}
+#background-video {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%; 
+  min-height: 100%; 
+  z-index: -1; /* Videonu arxa plana yerləşdirmək */
+  object-fit: cover; /* Videonun tam ekranı doldurması */
+ filter: blur(5px);
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  box-shadow: 0 2px 4px rgba(1, 1, 1, 1.1);
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  font-size: 1.2em;
+  padding-left: 7px;
+  padding-right: 7px;
+
+
+}
+
+.content {
+  position: relative;
+   z-index: 2; 
+    border-radius: 2px;   
+      text-align: center;
+  padding-bottom: 600px;
+  position: relative; z-index: 1;
+  line-height: 1.1; color: #000000;
+  text-align: left;
+ padding-left: 10px;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 -2px 4px rgba(1, 1, 1, 1.1);
+}
+
+footer a {
+  margin: 10 10px;
+  text-decoration: none;
+  
+}
+
+footer a img {
+  width: 190px;
+  height: 90px;
+  padding-top: 10px;
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  nav {
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+  }
+
+  nav a {
+      font-size: 1em;
+  }
+}

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilik Oyunu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #dbe9f4, #87ceeb);
+            overflow-x: hidden;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+        }
+        header .login {
+            display: flex;
+            align-items: center;
+        }
+        header .login img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        header .login button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid #333;
+            position: absolute;
+            transform: rotate(0deg);
+            transition: transform 3s ease-out;
+        }
+        .wheel .segment {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: white;
+            border: 1px solid #333;
+            transform-origin: bottom right;
+            clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .wheel .segment:nth-child(1) {
+            transform: rotate(0deg);
+            background-color: #ff6666;
+        }
+        .wheel .segment:nth-child(2) {
+            transform: rotate(60deg);
+            background-color: #66b3ff;
+        }
+        .wheel .segment:nth-child(3) {
+            transform: rotate(120deg);
+            background-color: #99ff99;
+        }
+        .wheel .segment:nth-child(4) {
+            transform: rotate(180deg);
+            background-color: #ffcc66;
+        }
+        .wheel .segment:nth-child(5) {
+            transform: rotate(240deg);
+            background-color: #cc99ff;
+        }
+        .wheel .segment:nth-child(6) {
+            transform: rotate(300deg);
+            background-color: #ff9966;
+        }
+        .pointer {
+            position: absolute;
+            top: 140px;
+            left: 135px;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border: 5px solid #333;
+            clip-path: polygon(50% 0, 0 100%, 100% 100%);
+        }
+        .question-container {
+            width: 300px;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .question-container h2 {
+            margin-bottom: 10px;
+        }
+        .answers button {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .answers button.correct {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .answers button.incorrect {
+            background-color: #F44336;
+            color: white;
+        }
+        .ranking-container ul {
+            list-style: none;
+            padding: 0;
+        }
+        .ranking-container ul li {
+            margin: 5px 0;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+        }
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+        }
+        .login-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .login-modal .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .login-modal input {
+            width: 80%;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .login-modal button {
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bilik Oyunu</h1>
+        <div>
+            <nav>
+                <a class="a1" href="sadiq.html">Ana səhifə</a>
+                <style>
+                    .a1{
+                        text-align: center;
+                        text-decoration: none;
+                        color: #ffffff;
+                       margin-top: 70px;
+                       position: fixed;
+                      margin-left:70px;
+                      background-color: #fd0000;
+                      padding-right: 10px;
+                      padding-left: 10px;
+                      border-radius: 10px;
+                    }
+                </style>
+            </nav>
+        </div>
+        <div class="login">
+            <img id="profilePicDisplay" src="" alt="" style="display:none;">
+            <span id="username">Qonaq</span>
+            <button id="loginBtn">Daxil ol</button>
+        </div>
+    </header>
+    <hr>
+    <div class="container">
+        <div class="wheel-container" id="wheelContainer">
+            <div class="wheel" id="wheel">
+                <div class="segment">Riyaziyyat</div>
+                <div class="segment">Azərbaycan dili</div>
+                <div class="segment">İngilis dili</div>
+                <div class="segment">Coğrafiya</div>
+                <div class="segment">Fizika</div>
+                <div class="segment">Kimya</div>
+            </div>
+            <div class="pointer"></div>
+        </div>
+        <button id="spinBtn" onclick="spinWheel()" style="margin-top: 30px;">Çevir</button>
+        <div class="question-container" id="questionContainer">
+            <h2 id="question">Sual</h2>
+            <div class="answers" id="answers">
+                <button onclick="checkAnswer(this, true)">A</button>
+                <button onclick="checkAnswer(this, false)">B</button>
+                <button onclick="checkAnswer(this, false)">C</button>
+                <button onclick="checkAnswer(this, false)">D</button>
+            </div>
+        </div>
+        <div class="ranking-container">
+            <h2>Sıralama</h2>
+            <ul id="ranking">
+                <!-- İstifadəçi xalları bura əlavə olunacaq -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="login-modal" id="loginModal">
+        <div class="modal-content">
+            <h2>Qeydiyyat / Daxil ol</h2>
+            <input type="text" id="fullname" placeholder="Ad Soyad">
+            <input type="file" id="profilePic" accept="image/*">
+            <button onclick="login()">Təsdiq et</button>
+        </div>
+    </div>
+
+    <script>
+        let loggedIn = false;
+        let score = 0;
+        let timer;
+        let questionsAnswered = 0;
+        const totalQuestions = 10;
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            document.getElementById('loginModal').classList.add('active');
+        });
+
+        function login() {
+            const fullname = document.getElementById('fullname').value;
+            const profilePicInput = document.getElementById('profilePic');
+            if (fullname) {
+                loggedIn = true;
+                document.getElementById('username').innerText = fullname;
+
+                if (profilePicInput.files && profilePicInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const profilePicDisplay = document.getElementById('profilePicDisplay');
+                        profilePicDisplay.src = e.target.result;
+                        profilePicDisplay.style.display = 'block';
+                    };
+                    reader.readAsDataURL(profilePicInput.files[0]);
+                }
+
+                document.getElementById('loginModal').classList.remove('active');
+            }
+        }
+
+        function spinWheel() {
+            if (!loggedIn) {
+                alert("Oyun oynamazdan əvvəl daxil olun.");
+                return;
+            }
+
+            const wheel = document.getElementById('wheel');
+            const degree = Math.floor(Math.random() * 360) + 1080;
+            wheel.style.transform = `rotate(${degree}deg)`;
+
+            setTimeout(() => {
+                document.getElementById('wheelContainer').style.display = 'none';
+                document.getElementById('spinBtn').style.display = 'none';
+                document.getElementById('questionContainer').style.display = 'block';
+                loadQuestion();
+            }, 3000);
+        }
+
+        function loadQuestion() {
+            //sualları buradan dəyişdir
+            const questions = [
+                {
+                    question: "Azərbaycan bayrağında neçə rəng var?",
+                    options: ["1", "2", "3", "4"],
+                    correct: 2
+                },
+                {
+                    question: "Paytaxtı Bakı olan ölkə hansıdır?",
+                    options: ["Azərbaycan", "Türkiyə", "Rusiya", "Gürcüstan"],
+                    correct: 0
+                },
+                {
+                    question: "Smestr imtahanlarında balın hansı aralıqdadır?",
+                    options: ["Kəsilmişəm", "Max nəticə", "50-dən yuxarı", "50-dən aşağı"],
+                    correct: 0
+                }
+            ];
+
+            if (questionsAnswered >= totalQuestions) {
+                document.getElementById('wheelContainer').style.display = 'block';
+                document.getElementById('spinBtn').style.display = 'block';
+                document.getElementById('questionContainer').style.display = 'none';
+                questionsAnswered = 0;
+                return;
+            }
+
+            const questionData = questions[questionsAnswered % questions.length];
+            document.getElementById('question').innerText = questionData.question;
+
+            const answers = document.getElementById('answers');
+            answers.innerHTML = '';
+            questionData.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.innerText = `${String.fromCharCode(65 + index)}) ${option}`;
+                button.onclick = () => checkAnswer(button, index === questionData.correct);
+                answers.appendChild(button);
+            });
+
+            questionsAnswered++;
+            questionsAnswered++;
+
+         // Taymeri 10 saniyəyə quraşdırırıq
+                timer = setTimeout(() => {
+              loadQuestion(subject);
+                }, 10000);
+        }
+
+        function checkAnswer(button, isCorrect) {
+            if (isCorrect) {
+                button.classList.add('correct');
+                score++;
+            } else {
+                button.classList.add('incorrect');
+            }
+
+            updateRanking();
+
+            setTimeout(() => {
+                loadQuestion();
+            }, 1000);
+        }
+
+        function updateRanking() {
+            const ranking = document.getElementById('ranking');
+            ranking.innerHTML = `<li>${document.getElementById('username').innerText} - ${score} xal</li>`;
+        }
+    </script>
+</body>
+</html>

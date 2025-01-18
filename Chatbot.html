@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #5bc3f7, #a0daf8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        nav {
+            width: 100%;
+            text-align: center;
+            background-color: #f0f8ff;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 200px;
+        }
+
+        nav a {
+            text-decoration: none;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .chatbot {
+            width: 90%;
+            max-width: 400px;
+            background-color: #f0f8ff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 10px;
+            display: inline-block;
+            max-width: 80%;
+        }
+
+        .user {
+            align-self: flex-end;
+            background-color: #cce5ff;
+        }
+
+        .bot {
+            align-self: flex-start;
+            background-color: #e2e3e5;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+
+        .input-container button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #0056b3;
+        }
+
+        hr {
+            width: 100%;
+            border: 0;
+            height: 1px;
+            background-color: #ddd;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#">Home</a>
+    </nav>
+
+    <div class="chatbot">
+        <div class="messages" id="messages">
+            <!-- Messages will appear here -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Mesaj yaz...">
+            <button onclick="sendMessage()">Göndər</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <script>
+        const messagesContainer = document.getElementById('messages');
+
+        function addMessage(text, sender) {
+            const message = document.createElement('div');
+            message.classList.add('message', sender);
+            message.textContent = text;
+            messagesContainer.appendChild(message);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const userMessage = userInput.value.trim();
+
+            if (userMessage) {
+                addMessage(userMessage, 'user');
+                userInput.value = '';
+
+                // Bot cavabları
+                setTimeout(() => {
+                    const botResponse = getBotResponse(userMessage);
+                    addMessage(botResponse, 'bot');
+                }, 500);
+            }
+        }
+
+        function getBotResponse(input) {
+            // Sadə cavab mexanizmi
+            input = input.toLowerCase();
+            if (input.includes('salam')) {
+                return 'Salam! Sizə necə kömək edə bilərəm?';
+            } else if (input.includes('necə')) {
+                return 'Mən yaxşıyam, bəs siz?';
+            } else if (input.includes('sağ ol')) {
+                return 'Xoşdur! Başqa sualınız varsa, buyurun.';
+            } else {
+                return 'Bağışlayın, bu mövzuda məlumatım yoxdur.';
+            }
+        }
+    </script>
+</body>
+</html>
