@@ -5,6 +5,223 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sadiq.az</title>
    <link rel="stylesheet" href="sadiq.css">
+   <style>
+    /* Qlobal stillər */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Bədən stilləri */
+body {
+  background: url('işıqlı\ mod.png') no-repeat center center fixed;
+  background-size: cover;
+  color: var(--text-color, #000);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+button{
+  border-radius: 20px;
+  padding: 2px;
+  background-color: #00ffff;
+}
+/* Mövcud kodların təsdiqi */
+body::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  z-index: -1;
+}
+
+body.dark-mode  {
+  background: url('qaranlıqmod.png') no-repeat center center fixed;
+  background-size: cover;
+  color: #ffffff;
+}
+
+
+/* Yeni Navbar animasiyası */
+@keyframes slideInFromLeft {
+  from {
+      left: -100%;
+      opacity: 0;
+  }
+  to {
+      left: 50%;
+      opacity: 1;
+      transform: translateX(-50%);
+  }
+}
+
+/* Navbar stilləri */
+.navbar {
+  width: 90%;
+  background: var(--navbar-bg, #ffffff);
+  justify-content: space-between;
+  padding: 15px 20px;
+  border-radius: 30px;
+  position: fixed;
+  top: 10px;
+  left: -100%;
+  transform: translateX(0);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-wrap: wrap;
+  animation: slideInFromLeft 1s forwards ease-out;
+  color: #000;
+}
+
+body.dark-mode .navbar {
+  background: #171717;
+  color: #fff;
+}
+
+body.dark-mode .navbar ul a {
+  color: #fff;
+}
+
+.navbar ul {
+  display: flex;
+  gap: 100px;
+  margin: 0;
+  padding: 0;
+  margin-left: 250px;
+}
+
+.navbar ul a {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text-color, #000);
+  transition: color 0.3s;
+}
+
+.navbar ul a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 0;
+  height: 3px;
+  background: #ff00ff;
+  transition: all 0.3s;
+  transform: translateX(-50%);
+}
+
+.navbar ul a:hover::after {
+  width: 100%;
+}
+
+/* Axtarış qutusu */
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 50px;
+}
+
+input::placeholder {
+  color: #000;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  background: linear-gradient(135deg, #ffffff, #00ffff);
+  color: rgb(7, 0, 0);
+  text-align: center;
+  box-shadow: 0 0 8px rgba(1, 1, 1, 0.7);
+  border-color: #ff0000 2px;
+}
+
+/* Vurğulama */
+.highlight {
+  background: yellow;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+/* Blur çərçivəsi */
+.blur-frame {
+  margin-top: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(15px);
+  position: relative;
+}
+
+/* Smartfonlar (landşaft) */
+@media (max-width: 576px) {
+ .navbar ul {
+  gap: 20px;
+  margin-left: 10px;
+
+ }
+ .search-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 60px;
+  margin-left: 10px;
+}
+.blur-frame {
+  margin-top: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(15px);
+  text-align: center;
+}
+img{
+  width: 100%;
+  height: 100%;
+}
+
+}
+
+/* Planşetlər */
+@media (min-width: 577px) and (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Kiçik ekranlı kompüterlər */
+@media (min-width: 769px) and (max-width: 1024px) {
+  body {
+    font-size: 18px;
+  }
+}
+
+/* Böyük ekranlı kompüterlər */
+@media (min-width: 1025px) {
+  body {
+    font-size: 20px;
+  }
+}
+p{
+  text-align: left;
+}
+   </style>
 </head>
 <body>
     <header>
@@ -33,8 +250,8 @@
         </div>
     </main>
     
-   <script >
-       const originalContent = document.getElementById('content').innerHTML;
+   <script src="sadiq.js">
+    const originalContent = document.getElementById('content').innerHTML;
 
 function highlightText() {
     let input = document.getElementById('search').value;
