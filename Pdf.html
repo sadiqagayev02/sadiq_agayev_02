@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Səsli Oxuma</title>
+    <style>
+ body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+iframe {
+    width: 90%;
+    height: 500px;
+    border: none;
+    max-width: 800px;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+select, button, input {
+    font-size: 16px;
+    margin: 5px;
+    padding: 10px;
+}
+
+/* Adjust range input width for smaller screens */
+input[type="range"] {
+    width: 200px;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 1200px) {
+    iframe {
+        width: 80%;
+        height: 450px;
+    }
+}
+
+@media (max-width: 768px) {
+    iframe {
+        width: 100%;
+        height: 350px;
+    }
+    input[type="range"] {
+        width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    iframe {
+        width: 100%;
+        height: 300px;
+    }
+    select, button, input {
+        font-size: 14px;
+        padding: 8px;
+    }
+    input[type="range"] {
+        width: 120px;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <h2>PDF Səsli Oxuma Sistemi</h2>
+
+    <!-- Adobe Acrobat ilə PDF Görüntüləmə -->
+    <iframe id="pdfViewer" src="Hacı Şahin - Hardan Başlamalı (1).pdf"></iframe>
+
+    <!-- Səsləndirmə və Sürət Kontrol Paneli -->
+    <div class="controls">
+        <label for="voiceSelect">Səs seçin:</label>
+        <select id="voiceSelect"></select>
+
+        <label for="speedControl">Sürət:</label>
+        <input type="range" id="speedControl" min="0.5" max="2" step="0.1" value="1">
+        <span id="speedValue">1.0x</span>
+
+        <button onclick="readPDF()">📖 Oxu</button>
+        <button onclick="stopReading()">⏹ Dayandır</button>
+    </div>
+
+    <script>
+        let voices = [];
+        let utterance = new SpeechSynthesisUtterance();
+        const voiceSelect = document.getElementById("voiceSelect");
+        const speedControl = document.getElementById("speedControl");
+        const speedValue = document.getElementById("speedValue");
+
+        // Səsləri yükləmək
+        function loadVoices() {
+            voices = speechSynthesis.getVoices();
+            voiceSelect.innerHTML = ""; // Səsləri təmizlə
+
+            voices.forEach((voice, index) => {
+                if (voice.lang.includes("az") || voice.lang.includes("tr") || voice.lang.includes("en")) { // Azərbaycan və ya uyğun dillər
+                    let option = document.createElement("option");
+                    option.value = index;
+                    option.textContent = voice.name + " (" + voice.lang + ")";
+                    voiceSelect.appendChild(option);
+                }
+            });
+        }
+
+        // PDF məzmununu oxumaq
+        function readPDF() {
+            let pdfText = "Bu PDF sənədindəki mətn oxunur."; // Əslində burada PDF-dən mətn çıxarılmalıdır.
+            utterance.text = pdfText;
+            utterance.voice = voices[voiceSelect.value] || voices[0];
+            utterance.rate = parseFloat(speedControl.value);
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // Səsləndirməni dayandırmaq
+        function stopReading() {
+            speechSynthesis.cancel();
+        }
+
+        // Sürəti göstərin
+        speedControl.addEventListener("input", () => {
+            speedValue.textContent = speedControl.value + "x";
+        });
+
+        // Səsləri yenilə
+        speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices();
+    </script>
+
+</body>
+</html>
