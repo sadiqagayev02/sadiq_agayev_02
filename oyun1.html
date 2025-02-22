@@ -255,123 +255,145 @@
     </div>
 
     <script>
-        let loggedIn = false;
-        let score = 0;
-        let timer;
-        let questionsAnswered = 0;
-        const totalQuestions = 10;
+           // İstifadəçi daxil olub-olmadığını yoxlayır
+let loggedIn = false;
+let score = 0;
+let timer;
+let questionsAnswered = 0;
+const totalQuestions = 10;
+let selectedSubject = '';
 
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            document.getElementById('loginModal').classList.add('active');
-        });
+// Daxil olma pəncərəsini açır
+document.getElementById('loginBtn').addEventListener('click', () => {
+    document.getElementById('loginModal').classList.add('active');
+});
 
-        function login() {
-            const fullname = document.getElementById('fullname').value;
-            const profilePicInput = document.getElementById('profilePic');
-            if (fullname) {
-                loggedIn = true;
-                document.getElementById('username').innerText = fullname;
+// Daxil olma funksiyası
+function login() {
+    const fullname = document.getElementById('fullname').value;
+    const profilePicInput = document.getElementById('profilePic');
+    if (fullname) {
+        loggedIn = true;
+        document.getElementById('username').innerText = fullname;
 
-                if (profilePicInput.files && profilePicInput.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const profilePicDisplay = document.getElementById('profilePicDisplay');
-                        profilePicDisplay.src = e.target.result;
-                        profilePicDisplay.style.display = 'block';
-                    };
-                    reader.readAsDataURL(profilePicInput.files[0]);
-                }
-
-                document.getElementById('loginModal').classList.remove('active');
-            }
+        if (profilePicInput.files && profilePicInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const profilePicDisplay = document.getElementById('profilePicDisplay');
+                profilePicDisplay.src = e.target.result;
+                profilePicDisplay.style.display = 'block';
+            };
+            reader.readAsDataURL(profilePicInput.files[0]);
         }
+        document.getElementById('loginModal').classList.remove('active');
+    }
+}
 
-        function spinWheel() {
-            if (!loggedIn) {
-                alert("Oyun oynamazdan əvvəl daxil olun.");
-                return;
-            }
+// Fənnlərə uyğun rənglər
+const subjects = {
+    'blue': 'İngilis dili',
+    'green': 'Riyaziyyat',
+    'red': 'Tarix',
+    'yellow': 'Nəqliyyat'
+};
 
-            const wheel = document.getElementById('wheel');
-            const degree = Math.floor(Math.random() * 360) + 1080;
-            wheel.style.transform = `rotate(${degree}deg)`;
+// Çarxı fırlatma funksiyası
+function spinWheel() {
+    if (!loggedIn) {
+        alert("Oyun oynamazdan əvvəl daxil olun.");
+        return;
+    }
+    
+    const wheel = document.getElementById('wheel');
+    const degree = Math.floor(Math.random() * 360) + 1080;
+    wheel.style.transform = `rotate(${degree}deg)`;
 
-            setTimeout(() => {
-                document.getElementById('wheelContainer').style.display = 'none';
-                document.getElementById('spinBtn').style.display = 'none';
-                document.getElementById('questionContainer').style.display = 'block';
-                loadQuestion();
-            }, 3000);
-        }
+    setTimeout(() => {
+        const selectedColor = Object.keys(subjects)[Math.floor(Math.random() * 4)];
+        selectedSubject = subjects[selectedColor];
+        alert(`Seçilən fənn: ${selectedSubject}`);
+        document.getElementById('wheelContainer').style.display = 'none';
+        document.getElementById('questionContainer').style.display = 'block';
+        loadQuestion();
+    }, 3000);
+}
 
-        function loadQuestion() {
-            //sualları buradan dəyişdir
-            const questions = [
-                {
-                    question: "Azərbaycan bayrağında neçə rəng var?",
-                    options: ["1", "2", "3", "4"],
-                    correct: 2
-                },
-                {
-                    question: "Paytaxtı Bakı olan ölkə hansıdır?",
-                    options: ["Azərbaycan", "Türkiyə", "Rusiya", "Gürcüstan"],
-                    correct: 0
-                },
-                {
-                    question: "Smestr imtahanlarında balın hansı aralıqdadır?",
-                    options: ["Kəsilmişəm", "Max nəticə", "50-dən yuxarı", "50-dən aşağı"],
-                    correct: 0
-                }
-            ];
+// Sualları fənnə görə ayırır
+const questionBank = {
+    'İngilis dili': [
+        { question: "'Apple' nə deməkdir?", options: ["Alma", "Armud", "Banana", "Üzüm"], correct: 2 },
+        { question: "'Dog' hansı heyvandır?", options: ["Pişik", "İt", "At", "Qoyun"], correct: 1 },
+        { question: "'ingilis dilində ne hərf var?", options: ["23", "26", "32", "20"], correct: 1 }
+    ],
+    'Riyaziyyat': [
+        { question: "5 + 3 = ?", options: ["6", "7", "8", "9"], correct: 2 },
+        { question: "10 - 4 = ?", options: ["5", "6", "7", "4"], correct: 1 }
+    ],
+    
+    'Nəqliyyat': [
+        { question: "Avtomobilin istismarı nədən aslıdır?", options: ["istifadə müddətindən", "Yanacaqdan", "Sürücüdən", "Usatdan"], correct: 2 },
+        { question: "10 - 4 = ?", options: ["5", "6", "7", "4"], correct: 1 }
+    ],
+};
 
-            if (questionsAnswered >= totalQuestions) {
-                document.getElementById('wheelContainer').style.display = 'block';
-                document.getElementById('spinBtn').style.display = 'block';
-                document.getElementById('questionContainer').style.display = 'none';
-                questionsAnswered = 0;
-                return;
-            }
+// Sualları yükləmə funksiyası
+function loadQuestion() {
+    if (questionsAnswered >= totalQuestions) {
+        alert("Oyun bitdi!");
+        document.getElementById('questionContainer').style.display = 'none';
+        return;
+    }
+    
+    const questions = questionBank[selectedSubject];
+    if (!questions) {
+        alert("Bu fənn üçün suallar mövcud deyil!");
+        return;
+    }
 
-            const questionData = questions[questionsAnswered % questions.length];
-            document.getElementById('question').innerText = questionData.question;
+    const questionData = questions[questionsAnswered % questions.length];
+    document.getElementById('question').innerText = questionData.question;
+    
+    const answers = document.getElementById('answers');
+    answers.innerHTML = '';
+    questionData.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.innerText = `${String.fromCharCode(65 + index)}) ${option}`;
+        button.onclick = () => checkAnswer(button, index === questionData.correct);
+        answers.appendChild(button);
+    });
 
-            const answers = document.getElementById('answers');
-            answers.innerHTML = '';
-            questionData.options.forEach((option, index) => {
-                const button = document.createElement('button');
-                button.innerText = `${String.fromCharCode(65 + index)}) ${option}`;
-                button.onclick = () => checkAnswer(button, index === questionData.correct);
-                answers.appendChild(button);
-            });
+    questionsAnswered++;
+    
+    // Taymeri 5 saniyəyə qururuq
+    timer = setTimeout(() => {
+        loadQuestion();
+    }, 5000);
+}
 
-            questionsAnswered++;
-            questionsAnswered++;
+// Cavabı yoxlama funksiyası
+function checkAnswer(button, isCorrect) {
+    clearTimeout(timer);
+    if (isCorrect) {
+        button.classList.add('correct');
+        score++;
+    } else {
+        button.classList.add('incorrect');
+    }
 
-         // Taymeri 10 saniyəyə quraşdırırıq
-                timer = setTimeout(() => {
-              loadQuestion(subject);
-                }, 10000);
-        }
+    updateRanking();
 
-        function checkAnswer(button, isCorrect) {
-            if (isCorrect) {
-                button.classList.add('correct');
-                score++;
-            } else {
-                button.classList.add('incorrect');
-            }
+    setTimeout(() => {
+        loadQuestion();
+    }, 1000);
+}
 
-            updateRanking();
+// Reytinq siyahısını yeniləyir
+function updateRanking() {
+    const ranking = document.getElementById('ranking');
+    ranking.innerHTML = `<li>${document.getElementById('username').innerText} - ${score} xal</li>`;
+}
 
-            setTimeout(() => {
-                loadQuestion();
-            }, 1000);
-        }
 
-        function updateRanking() {
-            const ranking = document.getElementById('ranking');
-            ranking.innerHTML = `<li>${document.getElementById('username').innerText} - ${score} xal</li>`;
-        }
     </script>
 </body>
 </html>
